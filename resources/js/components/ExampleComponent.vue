@@ -26,11 +26,6 @@ export default {
   components:{
     ComA
   },
-  mounted(){
-      setInterval(()=>{
-        this.$store.state.count++;
-      },100
-      )
-  }
+
 }
 </script>

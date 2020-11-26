@@ -9,8 +9,11 @@ require('./bootstrap');
 window.Vue = require('vue');
 import Vue from 'vue'
 import Vuex from 'vuex'
+import vuetify from '../plugins/vuetify'
+import VueRouter from 'vue-router'
 
-Vue.use(Vuex)
+
+Vue.use(Vuex,VueRouter)
 
 /**
  * The following block of code may be used to automatically register your
@@ -26,12 +29,23 @@ Vue.use(Vuex)
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 Vue.component('app', require('./app.vue').default);
 
+
+// import { routes } from '/router/index.js';
+import  routes  from './router/routes.js';
+
+//Register Routes
+const router = new VueRouter({
+    routes, 
+    mode: 'hash',
+
+})
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
 const app = new Vue({
+    router,
+    vuetify,
     el: '#app',
 });
