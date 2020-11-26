@@ -1,0 +1,93 @@
+/**
+ *
+ * Print Size A4 Water Mark
+ *
+*/
+@media print {
+    @page {
+        /*size: 297mm 210mm;*/ /* landscape */
+        size: 210mm 297mm; /* portrait */
+    }
+
+    .property-name{
+        font-size: 13px !important;
+        font-weight: bold !important;
+    }
+
+    .remind-detail{
+        font-size: 14px !important;
+        line-height: 23px !important;
+    }
+
+    /*.list-unstyled{
+        line-height: 18px !important;
+    }*/
+
+    .bills-env{
+        font-size: 13px !important;
+    }
+    .bills-env .title-peper-juristic{
+        font-size: 15px !important;
+        font-weight: bold !important;
+    }
+    .invoice-env .invoice-header .invoice-logo ul li {
+        font-size: 13px !important;
+    }
+    .invoice-env{
+        font-size: 13px !important;
+    }
+
+    .invoice-env .invoice-details .invoice-client-info, .invoice-env .invoice-details .invoice-payment-info {
+        font-size: 13px !important;
+        line-height: 16px !important;
+    }
+    .sig-label{
+        font-size: 13px !important;
+    }
+    .remark-row {
+        margin-bottom:0 !important;
+        font-size: 13px !important;
+        line-height: 16px;
+    }
+
+    .table-responsive td{
+        line-height: 15px !important;
+    }
+
+    body {
+        font-family: sans-serif !important;
+    }
+    b, strong{
+        font-family: sans-serif !important;
+        font-weight: bold;
+    }
+    _::-webkit-full-page-media, _:future, :root th {
+
+        font-family: sans-serif !important;
+    }
+    .title-peper-juristic{
+        line-height: 20px;
+    }
+    .expense-no{
+        font-size: 13px !important;
+        line-height: 24px !important;
+    }
+
+    .text-bold {
+        font-weight: 500 !important;
+    }
+
+    .bank-table thead th {
+        font-size: 13px !important;
+        background: #e5e4e8 !important;
+    }
+    .bank-table thead tr th,
+    .bank-table tbody tr td {
+        border: 1px solid #6f6f6f !important;
+        border-collapse: collapse;
+        padding: 5px !important;
+        line-height: 13px !important;
+        /*border: 1px solid #6f6f6f;*/
+        /*border-collapse: collapse;*/
+    }
+}

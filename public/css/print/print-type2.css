@@ -1,0 +1,96 @@
+/**
+ *
+ * Print Size A5 Water Mark
+ *
+*/
+@media print {
+    @page {
+        size: 210mm 148mm; /* landscape */
+    }
+
+    .property-name{
+        font-size: 10px !important;
+        font-weight: bold !important;
+    }
+
+    .remind-detail{
+        font-size: 11px !important;
+        line-height: 19px !important;
+    }
+
+    /*.list-unstyled{
+        line-height: 15px !important;
+    }*/
+
+    .invoice-header{
+        padding-bottom : 0 !important;
+    }
+
+    .invoice-header li {
+        margin-top: 0 !important;
+    }
+
+    .invoice-details {
+        padding-top : 5px !important;
+        padding-bottom : 5px !important;
+    }
+
+    .invoice-totals {
+        margin-top: 0px !important;
+    }
+
+    .bills-env{
+        font-size: 8px !important;
+    }
+    .bills-env .title-peper-juristic{
+        font-size: 9px !important;
+        font-weight: bold !important;
+    }
+    .invoice-env .invoice-header .invoice-logo ul li {
+        font-size: 9px !important;
+    }
+    .invoice-env{
+        font-size: 9px !important;
+    }
+
+    .invoice-env .invoice-details .invoice-client-info, .invoice-env .invoice-details .invoice-payment-info {
+        font-size: 7px !important;
+        line-height: 8px !important;
+    }
+
+    .signature-row {
+        margin:0px !important;
+        padding:0px !important;
+    }
+
+    .sig-label{
+        font-size: 7px !important;
+        margin:0px !important;
+        padding:0px !important;
+    }
+    .remark-row {
+        margin-bottom:0 !important;
+        font-size: 7px !important;
+        line-height: 7px !important;
+    }
+
+    .table-responsive td{
+        font-size: 7px !important;
+        line-height: 8px !important;
+    }
+
+    body {
+        font-family: sans-serif !important;
+    }
+    b, strong{
+        font-family: sans-serif !important;
+        font-weight: bold;
+    }
+    _::-webkit-full-page-media, _:future, :root th {
+
+        font-family: sans-serif !important;
+    }
+    .title-peper-juristic{
+        line-height: 11px !important;
+    }
+}

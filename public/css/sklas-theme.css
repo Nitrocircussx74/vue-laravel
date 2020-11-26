@@ -1,0 +1,78 @@
+/* #d8d8d8 */
+.page-loading-overlay {
+    background: rgb(21,48,80);
+    background: linear-gradient(187deg, rgba(21,48,80,1) 0%, rgba(21,28,36,1) 89%);
+}
+.btn.btn-primary,.btn.btn-secondary {
+    background: #153050;
+    color: #fff;
+}
+.btn.btn-secondary:hover,
+.btn.btn-secondary:active,
+.btn.btn-secondary:focus{
+    color: #d8d8d8;
+    background-color: #191919;
+}
+.label.label-success {
+    background: #C5A154;
+}
+.sidebar-menu {
+    background: #153050;
+}
+.sidebar-menu .main-menu a {
+    color: #e3e3e3;
+    border-bottom: 1px solid #31485f;
+}
+.sidebar-menu .main-menu li.active > a,
+.sidebar-menu .main-menu a:hover {
+    color: #C5A154;
+}
+.sidebar-menu .logo-env .logo {
+    float: none;
+    text-align: center;
+}
+.sidebar-menu .logo-env {
+    border-bottom: 1px solid #31485f;
+}
+.modal .modal-dialog .modal-content .modal-header {
+    background-color: #153050;
+    color: #d8d8d8;
+}
+div.datepicker td, div.datepicker th {
+    font-size: 16px;
+}
+div.datepicker table tr td.active, div.datepicker table tr td.active:hover, div.datepicker table tr td.active.disabled, div.datepicker table tr td.active.disabled:hover {
+    background: #153050;
+    color: #fff !important;
+}
+
+.selectboxit-list>.selectboxit-focus>.selectboxit-option-anchor {
+    background-color: #153050;
+}
+.panel .panel-body {
+    color: #153050;
+}
+.general-table>tbody>tr>td {
+    vertical-align: middle;
+}
+.cbr-replaced.cbr-turquoise .cbr-state {
+    background: #153050;
+    border-color: #000000;
+}
+
+.drop-property-file {
+    border: 1px solid #000000;
+    background: #334a67;
+}
+#attachment:hover, #attachment_edit:hover {
+    color: #C5A154;
+}
+
+@media screen and (min-width: 769px) {
+    .sidebar-menu.collapsed .main-menu > li > ul {
+        background-color: #153050;
+    }
+    .sidebar-menu.collapsed .main-menu > li.active, .sidebar-menu.collapsed .main-menu > li li.active {
+        background-color: #153050;
+    }
+}

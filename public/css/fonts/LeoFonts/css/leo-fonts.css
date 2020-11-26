@@ -1,0 +1,15 @@
+/*!
+ *  Font Awesome 4.2.0 by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ */
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+	font-family: 'Leo-Bold';
+	src: url('Leo-Bold.eot');
+	src: url('Leo-Bold.eot?#iefix') format('embedded-opentype'), url('Leo-Bold.svg#Leo-Bold') format('svg'),
+		url('Leo-Bold.ttf') format('truetype'), url('Leo-Bold.woff') format('woff'),
+		url('Leo-Bold.woff2') format('woff2');
+	font-weight: normal;
+	font-style: normal;
+}

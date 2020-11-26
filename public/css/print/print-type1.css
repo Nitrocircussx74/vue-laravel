@@ -1,0 +1,75 @@
+/**
+ *
+ * Print Size A4 No Water Mark
+ *
+*/
+@media print {
+    @page {
+        /*size: 297mm 210mm;*/ /* landscape */
+        size: 210mm 297mm; /* portrait */
+    }
+
+    img.admin-bills{
+        display: none;
+    }
+
+    .property-name{
+        font-size: 13px !important;
+        font-weight: bold !important;
+    }
+
+    .remind-detail{
+        font-size: 14px !important;
+        line-height: 23px !important;
+    }
+
+    /*.list-unstyled{
+        line-height: 18px !important;
+    }*/
+
+    .bills-env{
+        font-size: 11px !important;
+    }
+    .bills-env .title-peper-juristic{
+        font-size: 13px !important;
+        font-weight: bold !important;
+    }
+    .invoice-env .invoice-header .invoice-logo ul li {
+        font-size: 11px !important;
+    }
+    .invoice-env{
+        font-size: 11px !important;
+    }
+
+    .invoice-env .invoice-details .invoice-client-info, .invoice-env .invoice-details .invoice-payment-info {
+        font-size: 11px !important;
+        line-height: 13px !important;
+    }
+    .sig-label{
+        font-size: 11px !important;
+    }
+    .remark-row {
+        margin-bottom:0 !important;
+        font-size: 11px !important;
+        line-height: 13px;
+    }
+
+    .table-responsive td{
+        line-height: 13px !important;
+    }
+
+    body {
+        font-family: sans-serif !important;
+    }
+    b, strong{
+        font-family: sans-serif !important;
+        font-weight: bold;
+    }
+    _::-webkit-full-page-media, _:future, :root th {
+
+        font-family: sans-serif !important;
+    }
+    .title-peper-juristic{
+        line-height: 20px;
+    }
+}
