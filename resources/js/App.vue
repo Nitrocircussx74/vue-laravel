@@ -1,10 +1,10 @@
 <template>
-  <v-app>
-    <v-main>
-        <routes></routes>
-        
-    </v-main>
-  </v-app>
+ <div>
+     <h1>v-model</h1>
+
+     <router-view></router-view>
+
+ </div>
 
   <!-- <div class="container">
         <div class="row justify-content-center">
