@@ -6,44 +6,29 @@
  </div> -->
 
   <v-main>
-    <Menu></Menu>
-    <v-container>
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card">
-            <div class="card-header">Example Component</div>
-
-            <div class="card-body"></div>
-          </div>
-        </div>
-      </div>
-    </v-container>
-
-    <!--   
-   <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Example Component</div>
-
-                    <div class="card-body">
-                    </div> 
-                </div>
-            </div>
-        </div>
-    </div>  -->
+    <v-app>
+      <Menu></Menu>
+      <v-container>
+        <router-view></router-view>
+      </v-container>
+    </v-app>
   </v-main>
 </template>
 
 <script>
 import store from "./store/index";
 import Menu from "./components/Menu.vue";
+
 import ComA from "./components/ComA.vue";
 import ComB from "./components/ComB.vue";
+import Home from "./views/Home.vue";
+import About from "./views/About.vue";
 export default {
   store,
   name: "app",
   components: {
+    Home,
+    About,
     Menu,
     ComA,
     ComB,

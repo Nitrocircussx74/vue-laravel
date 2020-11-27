@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-main',
+    'version' => 'dev-main',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => '07278ba959f21b04c47b438da1573497051c3fa7',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -415,14 +415,23 @@
       ),
       'reference' => '93f6d565a07045baa0e4b941ae1f733cd5984d65',
     ),
-    'laravel/laravel' => 
+    'laravel/helpers' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'v1.4.0',
+      'version' => '1.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => 'cde8ea2427db4f37d67729846b70452499210a21',
+    ),
+    'laravel/laravel' => 
+    array (
+      'pretty_version' => 'dev-main',
+      'version' => 'dev-main',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '07278ba959f21b04c47b438da1573497051c3fa7',
     ),
     'laravel/tinker' => 
     array (
