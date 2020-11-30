@@ -1,10 +1,4 @@
 <template>
-  <!-- <div>
-     <h1>v-model</h1>
-
-
- </div> -->
-
   <v-main>
     <v-app>
       <Menu></Menu>
@@ -21,14 +15,15 @@ import Menu from "./components/Menu.vue";
 
 import ComA from "./components/ComA.vue";
 import ComB from "./components/ComB.vue";
-import Home from "./views/Home.vue";
-import About from "./views/About.vue";
+// import Home from "./views/Home.vue";
+// import About from "./views/About.vue";
+
 export default {
   store,
   name: "app",
   components: {
-    Home,
-    About,
+    // Home,
+    // About,
     Menu,
     ComA,
     ComB,

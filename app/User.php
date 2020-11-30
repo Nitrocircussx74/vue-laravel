@@ -6,10 +6,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\MailResetPasswordToken;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'active','line_user'
+        'name', 'email', 'password', 'phone', 'active', 'line_user'
     ];
 
     /**
@@ -66,6 +68,6 @@ class User extends Authenticatable
 
     public function officialAccount()
     {
-        return $this->hasMany('App\Model\AdminOfficialAccount','user_id','id');
+        return $this->hasMany('App\Model\AdminOfficialAccount', 'user_id', 'id');
     }
 }

@@ -6,11 +6,8 @@
                     <div class="card-header">Example Component</div>
 
                     <div class="card-body">
-                        <h1>{{$store.state.count}}</h1>
+                        I'm an example component.
                     </div>
-
-            <ComA></ComA>
-                
                 </div>
             </div>
         </div>
@@ -18,14 +15,9 @@
 </template>
 
 <script>
-import store from '../store/index'
-import ComA from "./ComA.vue"
-export default {
-  store,
-  name: 'app',
-  components:{
-    ComA
-  },
-
-}
+    export default {
+        mounted() {
+            console.log('Component mounted.')
+        }
+    }
 </script>

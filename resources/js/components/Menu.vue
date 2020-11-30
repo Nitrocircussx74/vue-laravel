@@ -48,14 +48,23 @@
 </template>
 
 <script>
+import currentUser from "../store/modules/currentUser";
 export default {
   mounted() {},
+  // computed: {
+  //   currentUser: {
+  //     get() {
+  //       return this.$store.state.currentUser.user;
+  //     },
+  //   },
+  // },
   methods: {
     logout() {
       axios
         .post("/api/logout")
         .then((response) => {
-          this.$router.push("/");
+          window.location.href = "login";
+          // this.$router.push("/login");
           // location.reload();
         })
         .catch((error) => {
@@ -71,6 +80,11 @@ export default {
         this.logout();
       }
     },
+  },
+  created() {
+    axios.defaults.headers.common["Authorization"] =
+      "Beare" + localStorage.getItem("token");
+    this.$store.dispatch("currentUser/getUser");
   },
   data() {
     return {

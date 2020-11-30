@@ -17,11 +17,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+// Auth::routes();
 
 Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/home', 'HomeController@index')->name('home');
 
+
+Route::prefix('auth')->group(function () {
+    Route::get('init', 'AppController@init');
+    Route::post('login', 'AppController@login');
+    Route::post('register', 'AppController@register');
+    Route::post('logout', 'AppController@logout');
+});
 // Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
@@ -33,3 +40,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 // Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
+
+// Auth::routes();
+
+// Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

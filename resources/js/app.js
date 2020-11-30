@@ -4,28 +4,43 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import Vue from 'vue'
-import Vuex from 'vuex'
+
+
 import vuetify from '../plugins/vuetify'
 // import 'material-design-icons-iconfont/dist/material-design-icons.css' 
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import '@mdi/font/css/materialdesignicons.css' 
-import router from './router'
-import store from "./store/index";
+import routes from './router'
+import store from "./store";
+import VueRouter from 'vue-router';
+// import App from "./App.vue";
 
+Vue.use(VueRouter);
+Vue.component('spinner',require('vue-simple-spinner'));
 
-Vue.use(Vuex)
+const router = new VueRouter({
+    routes
+ });
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+// Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
-
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('login-form', require('./components/LoginForm.vue').default);
 Vue.component('app', require('./app.vue').default);
+Vue.component(
+    'passport-clients',
+    require('./components/passport/Clients.vue').default
+);
+
+Vue.component(
+    'passport-authorized-clients',
+    require('./components/passport/AuthorizedClients.vue').default
+);
+
+Vue.component(
+    'passport-personal-access-tokens',
+    require('./components/passport/PersonalAccessTokens.vue').default
+);
+
 
 const app = new Vue({
     router,
@@ -37,5 +52,7 @@ const app = new Vue({
     // icons: {
     //     iconfont: 'mdi', // default - only for display purposes
     //   },
+    // render:h=>h(App)
     el: '#app',
-})
+// }).$mount('#app');
+});
