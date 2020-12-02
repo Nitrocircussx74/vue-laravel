@@ -14,7 +14,7 @@ const actions ={
     // },
     loginUser({state,commit},user)
     {
-            axios.post("api/login",{
+            axios.post("api/user/login",{
                 email:user.email,
                 password:user.password
             }).then(res=>{
@@ -25,6 +25,11 @@ const actions ={
                 console.log(res.data);
                 window.location.replace("/home")
             })
+    },
+    logoutUser(){
+        //remove token
+        localStorage.removeItem("token");
+        window.location.replace('/login');
     }
 
 };

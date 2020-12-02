@@ -60,8 +60,9 @@ export default {
   // },
   methods: {
     logout() {
+      // this.$store.dispatch("currentUser/logoutUser");
       axios
-        .post("/api/logout")
+        .post("/api/user/logout")
         .then((response) => {
           window.location.href = "login";
           // this.$router.push("/login");
@@ -84,7 +85,7 @@ export default {
   created() {
     axios.defaults.headers.common["Authorization"] =
       "Beare" + localStorage.getItem("token");
-    this.$store.dispatch("currentUser/getUser");
+    // this.$store.dispatch("currentUser/getUser");
   },
   data() {
     return {

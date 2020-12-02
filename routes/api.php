@@ -18,9 +18,21 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 // Route::any('logout', 'Api\LoginController@logout');
-Route::get('init', 'Api\AppController@init');
-Route::post('login', 'Api\LoginController@login');
-Route::get('current', 'Api\LoginController@getUser');
 
-Route::post('register', 'Api\AppController@register');
-Route::post('logout', 'Api\AppController@logout');
+Route::prefix('/user')->group(function () {
+
+    Route::get('init', 'api\AppController@init');
+    Route::post('login', 'api\LoginController@login');
+    Route::get('current', 'api\LoginController@getUser');
+    Route::post('register', 'api\AppController@register');
+    Route::post('logout', 'api\AppController@logout');
+
+    Route::middleware('auth:api')->get('/all', 'api\user\UserController@index');
+});
+
+// Route::get('init', 'api\AppController@init');
+// Route::post('login', 'api\LoginController@login');
+// Route::get('current', 'api\LoginController@getUser');
+
+// Route::post('register', 'api\AppController@register');
+// Route::post('logout', 'api\AppController@logout');
