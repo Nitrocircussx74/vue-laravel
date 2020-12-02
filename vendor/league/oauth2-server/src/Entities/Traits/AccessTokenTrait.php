@@ -10,9 +10,8 @@
 namespace League\OAuth2\Server\Entities\Traits;
 
 use DateTimeImmutable;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Key\LocalFileReference;
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
 use League\OAuth2\Server\CryptKey;
@@ -27,11 +26,6 @@ trait AccessTokenTrait
     private $privateKey;
 
     /**
-     * @var Configuration
-     */
-    private $jwtConfiguration;
-
-    /**
      * Set the private key used to encrypt this access token.
      */
     public function setPrivateKey(CryptKey $privateKey)
@@ -40,41 +34,23 @@ trait AccessTokenTrait
     }
 
     /**
-     * Initialise the JWT Configuration.
-     */
-    public function initJwtConfiguration()
-    {
-        $privateKeyPassPhrase = $this->privateKey->getPassPhrase();
-
-        $verificationKey = empty($privateKeyPassPhrase) ?
-            InMemory::plainText('') :
-            InMemory::plainText($this->privateKey->getPassPhrase());
-
-        $this->jwtConfiguration = Configuration::forAsymmetricSigner(
-            new Sha256(),
-            LocalFileReference::file($this->privateKey->getKeyPath()),
-            $verificationKey
-        );
-    }
-
-    /**
      * Generate a JWT from the access token
+     *
+     * @param CryptKey $privateKey
      *
      * @return Token
      */
-    private function convertToJWT()
+    private function convertToJWT(CryptKey $privateKey)
     {
-        $this->initJwtConfiguration();
-
-        return $this->jwtConfiguration->builder()
+        return (new Builder())
             ->permittedFor($this->getClient()->getIdentifier())
             ->identifiedBy($this->getIdentifier())
-            ->issuedAt(new DateTimeImmutable())
-            ->canOnlyBeUsedAfter(new DateTimeImmutable())
-            ->expiresAt($this->getExpiryDateTime())
+            ->issuedAt(\time())
+            ->canOnlyBeUsedAfter(\time())
+            ->expiresAt($this->getExpiryDateTime()->getTimestamp())
             ->relatedTo((string) $this->getUserIdentifier())
             ->withClaim('scopes', $this->getScopes())
-            ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
+            ->getToken(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()));
     }
 
     /**
@@ -82,7 +58,7 @@ trait AccessTokenTrait
      */
     public function __toString()
     {
-        return $this->convertToJWT()->toString();
+        return (string) $this->convertToJWT($this->privateKey);
     }
 
     /**

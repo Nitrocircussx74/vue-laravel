@@ -9,23 +9,17 @@
 
 namespace League\OAuth2\Server\AuthorizationValidators;
 
-use DateTimeZone;
-use Lcobucci\Clock\SystemClock;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Encoding\CannotDecodeContent;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Key\LocalFileReference;
+use BadMethodCallException;
+use InvalidArgumentException;
+use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Token\InvalidTokenStructure;
-use Lcobucci\JWT\Token\UnsupportedHeaderFound;
-use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Constraint\ValidAt;
-use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
+use Lcobucci\JWT\ValidationData;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\CryptTrait;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 
 class BearerTokenValidator implements AuthorizationValidatorInterface
 {
@@ -40,11 +34,6 @@ class BearerTokenValidator implements AuthorizationValidatorInterface
      * @var CryptKey
      */
     protected $publicKey;
-
-    /**
-     * @var Configuration
-     */
-    private $jwtConfiguration;
 
     /**
      * @param AccessTokenRepositoryInterface $accessTokenRepository
@@ -62,24 +51,6 @@ class BearerTokenValidator implements AuthorizationValidatorInterface
     public function setPublicKey(CryptKey $key)
     {
         $this->publicKey = $key;
-
-        $this->initJwtConfiguration();
-    }
-
-    /**
-     * Initialise the JWT configuration.
-     */
-    private function initJwtConfiguration()
-    {
-        $this->jwtConfiguration = Configuration::forSymmetricSigner(
-            new Sha256(),
-            InMemory::plainText('')
-        );
-
-        $this->jwtConfiguration->setValidationConstraints(
-            new ValidAt(new SystemClock(new DateTimeZone(\date_default_timezone_get()))),
-            new SignedWith(new Sha256(), LocalFileReference::file($this->publicKey->getKeyPath()))
-        );
     }
 
     /**
@@ -96,43 +67,40 @@ class BearerTokenValidator implements AuthorizationValidatorInterface
 
         try {
             // Attempt to parse and validate the JWT
-            $token = $this->jwtConfiguration->parser()->parse($jwt);
-
-            $constraints = $this->jwtConfiguration->validationConstraints();
-
+            $token = (new Parser())->parse($jwt);
             try {
-                $this->jwtConfiguration->validator()->assert($token, ...$constraints);
-            } catch (RequiredConstraintsViolated $exception) {
-                throw OAuthServerException::accessDenied('Access token could not be verified');
+                if ($token->verify(new Sha256(), $this->publicKey->getKeyPath()) === false) {
+                    throw OAuthServerException::accessDenied('Access token could not be verified');
+                }
+            } catch (BadMethodCallException $exception) {
+                throw OAuthServerException::accessDenied('Access token is not signed', null, $exception);
             }
-        } catch (CannotDecodeContent | InvalidTokenStructure | UnsupportedHeaderFound $exception) {
+
+            // Ensure access token hasn't expired
+            $data = new ValidationData();
+            $data->setCurrentTime(\time());
+
+            if ($token->validate($data) === false) {
+                throw OAuthServerException::accessDenied('Access token is invalid');
+            }
+        } catch (InvalidArgumentException $exception) {
+            // JWT couldn't be parsed so return the request as is
             throw OAuthServerException::accessDenied($exception->getMessage(), null, $exception);
+        } catch (RuntimeException $exception) {
+            // JWT couldn't be parsed so return the request as is
+            throw OAuthServerException::accessDenied('Error while decoding to JSON', null, $exception);
         }
 
-        $claims = $token->claims();
-
         // Check if token has been revoked
-        if ($this->accessTokenRepository->isAccessTokenRevoked($claims->get('jti'))) {
+        if ($this->accessTokenRepository->isAccessTokenRevoked($token->getClaim('jti'))) {
             throw OAuthServerException::accessDenied('Access token has been revoked');
         }
 
         // Return the request with additional attributes
         return $request
-            ->withAttribute('oauth_access_token_id', $claims->get('jti'))
-            ->withAttribute('oauth_client_id', $this->convertSingleRecordAudToString($claims->get('aud')))
-            ->withAttribute('oauth_user_id', $claims->get('sub'))
-            ->withAttribute('oauth_scopes', $claims->get('scopes'));
-    }
-
-    /**
-     * Convert single record arrays into strings to ensure backwards compatibility between v4 and v3.x of lcobucci/jwt
-     *
-     * @param mixed $aud
-     *
-     * @return array|string
-     */
-    private function convertSingleRecordAudToString($aud)
-    {
-        return \is_countable($aud) && \count($aud) === 1 ? $aud[0] : $aud;
+            ->withAttribute('oauth_access_token_id', $token->getClaim('jti'))
+            ->withAttribute('oauth_client_id', $token->getClaim('aud'))
+            ->withAttribute('oauth_user_id', $token->getClaim('sub'))
+            ->withAttribute('oauth_scopes', $token->getClaim('scopes'));
     }
 }

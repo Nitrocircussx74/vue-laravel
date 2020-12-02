@@ -2,17 +2,17 @@
 
 namespace App;
 
+use App\Http\Controllers\Notifications\MailResetPasswordNotification;
+use App\Http\Controllers\Notifications\VerifyApiEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Validator;
-use App\Notifications\MailResetPasswordToken;
-// use Laravel\Passport\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
+    use Notifiable;
 
-    // use HasApiTokens, Notifiable;
-    use  Notifiable;
+    protected $keyType = 'string';
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'active', 'line_user'
+        'name', 'email', 'password', 'phone', 'pea_customer',
     ];
 
     /**
@@ -41,34 +41,33 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public $rules = [
-        'fname' => 'required',
-        'lname' => 'required',
-        'phone' => 'max:10|required',
-        'email' => 'required|email|max:255|unique:users,email',
-        'password' => 'alpha_num|min:4|required',
-        'password_confirm' => 'alpha_num|min:4|required|same:password',
-    ];
-
-    protected $keyType = 'string';
-
-    public function validate($data)
+    public function getJWTIdentifier()
     {
-        Validator::extend('not_empty', function ($attribute, $value, $parameters) {
-            return !empty($value);
-        });
-
-        $v = Validator::make($data, $this->rules);
-        return $v;
+        return $this->getKey();
     }
 
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+    /**
+     * Send the password reset notification.
+     * @note: This override Authenticatable methodology
+     *
+     * @param  string  $token
+     * @return void
+     */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new MailResetPasswordToken($token));
+        $this->notify(new MailResetPasswordNotification($token));
     }
 
-    public function officialAccount()
-    {
-        return $this->hasMany('App\Model\AdminOfficialAccount', 'user_id', 'id');
-    }
+    /**
+     * Send the email verification notification.
+     * @note: This override Authenticatable methodology
+     *
+     * @param  none
+     * @return void
+     */
 }

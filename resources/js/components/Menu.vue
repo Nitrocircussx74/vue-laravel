@@ -60,18 +60,18 @@ export default {
   // },
   methods: {
     logout() {
-      // this.$store.dispatch("currentUser/logoutUser");
-      axios
-        .post("/api/user/logout")
-        .then((response) => {
-          window.location.href = "login";
-          // this.$router.push("/login");
-          // location.reload();
-        })
-        .catch((error) => {
-          console.log("error");
-          // location.reload();
-        });
+      this.$store.dispatch("currentUser/logoutUser");
+      // axios
+      //   .post("/api/user/logout")
+      //   .then((response) => {
+      //     window.location.href = "login";
+      //     // this.$router.push("/login");
+      //     // location.reload();
+      //   })
+      //   .catch((error) => {
+      //     console.log("error");
+      //     // location.reload();
+      //   });
     },
     menuActionClick(action) {
       if (action === "test") {
@@ -83,9 +83,13 @@ export default {
     },
   },
   created() {
-    axios.defaults.headers.common["Authorization"] =
-      "Beare" + localStorage.getItem("token");
-    // this.$store.dispatch("currentUser/getUser");
+    if (localStorage.hasOwnProperty("token")) {
+      axios.defaults.headers.common["Authorization"] =
+        "Beare" + localStorage.getItem("token");
+      // this.$store.dispatch("currentUser/getUser");
+    } else {
+      window.location.replace("/login");
+    }
   },
   data() {
     return {

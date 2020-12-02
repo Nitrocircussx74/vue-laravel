@@ -14,22 +14,25 @@ const actions ={
     // },
     loginUser({state,commit},user)
     {
-            axios.post("api/user/login",{
+            axios.post("api/login",{
                 email:user.email,
                 password:user.password
             }).then(res=>{
-                if(res.token)
+               
+                if(res.data.access_token)
             {
-                localStorage.setItem('token',res.token)
+                localStorage.setItem('token',res.data.access_token)
             }
-                console.log(res.data);
+
+            // console.log(res.data.access_token);
+                // console.log(res.data);
                 window.location.replace("/home")
             })
     },
     logoutUser(){
         //remove token
         localStorage.removeItem("token");
-        window.location.replace('/login');
+        window.location.replace("/login");
     }
 
 };

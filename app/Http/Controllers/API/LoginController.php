@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\User;
 
+use JWTAuth;
+use Carbon\Carbon;
+use App\Model\Installation;
+
 class LoginController extends Controller
 {
     /*
@@ -45,80 +49,30 @@ class LoginController extends Controller
     }
     public function login(Request $r)
     {
-        $email = strtolower($r->get('email'));
-        $password = trim($r->get('password'));
-        $user = User::where('email', '=', $email)->first();
-        // $auth = false;
-        $credentials = $r->only('email', 'password');
-        $credentials['email'] = strtolower($credentials['email']);
-        $credentials['password'] = $password;
 
-        if (Auth::attempt($credentials, true)) {
-            return response()->json(Auth::user(), 200);
-        } else {
-            return response()->json(['error' => 'Could not log you in.'], 401);
+        $validator = Validator::make($r->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
+        if (!$token = auth('api')->attempt($validator->validated())) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
 
-        // dd($r->all());
-        // if ($user) {
-        //     if (Hash::check($r->password, $user->password)) {
-        //         // $accessToken = Auth::user()->createToken('authToken')->accessToken;
-        //         // return response(['user' => Auth::user(), 'access_token' => $accessToken]);
-        //         return response(['user' => Auth::user()]);
-        //     } else {
-        //         $response = ["message" => "Password mismatch"];
-        //         return response($response, 422);
-        //     }
+        return $this->createNewToken($token);
+
+        // $credentials = request(['email', 'password']);
+
+        // if (!$token = auth('api')->attempt($credentials)) {
+        //     return response()->json(['error' => 'Unauthorized'], 401);
         // }
+        // return $this->createNewToken($token);
 
-
-        // if (Auth::user()) {
-        //     $auth = true;
-        // } else if (Auth::attempt($credentials)) {
-        //     $auth = true; // Success
-        // }
-        // if ($auth) {
-        //     // $accessToken = Auth::user()->createToken('authToken')->accessToken;
-
-        //     // return response(['user' => Auth::user(), 'access_token' => $accessToken]);
-        //     return response(['user' => Auth::user()]);
-        // } else {
-        //     return response(['message' => 'Invaild login']);
-        // }
-
-
-        // if (!Auth::attempt($login)) {
-        //     return response(['message' => 'Invaild login']);
-        // }
-
-        // $validator = Validator::make($r->all(), [
-        //     'email' => 'required|string|email|max:255',
-        //     'password' => 'required|string|min:6|confirmed',
-        // ]);
-        // if ($validator->fails()) {
-        //     return response(['errors' => $validator->errors()->all()], 422);
-        // }
-        // $user = User::where('email', $r->email)->first();
-        // if ($user) {
-        //     if (Hash::check($r->password, $user->password)) {
-        //         $token = $user->createToken('authToken')->accessToken;
-        //         $response = ['user' => Auth::user(), 'token' => $token];
-        //         return response($response, 200);
-        //     } else {
-        //         $response = ["message" => "Password mismatch"];
-        //         return response($response, 422);
-        //     }
-        // } else {
-        //     $response = ["message" => 'User does not exist'];
-        //     return response($response, 422);
-        // }
-
-        // if (Auth::attempt(['email' => $r->email, 'password' => $r->password], true)) {
-        //     return response()->json(Auth::user(), 200);
-        // } else {
-        //     return response()->json(['error' => 'Could not log you in.'], 401);
-        // }
+        // return response()->json(['user' => Auth::user(), 'token' => $token], 200);
     }
     public function getUser()
     {
@@ -127,10 +81,40 @@ class LoginController extends Controller
     }
     public function logout()
     {
-        Auth::logout();
-        // $this->guard()->logout();
-        // $request->session()->flush();
-        // $request->session()->regenerate();
-        // return redirect('/');
+        auth()->logout();
+
+        return response()->json(['message' => 'User successfully signed out']);
+    }
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:users',
+            'password' => 'required|string|confirmed|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $user = User::create(array_merge(
+            $validator->validated(),
+            ['password' => bcrypt($request->password)]
+        ));
+
+        return response()->json([
+            'message' => 'User successfully registered',
+            'user' => $user
+        ], 201);
+    }
+
+    protected function createNewToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            //'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+        ]);
     }
 }
