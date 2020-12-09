@@ -21,43 +21,31 @@ use Illuminate\Support\Facades\Route;
 // Route::any('logout', 'Api\LoginController@logout');
 
 
-
-
-
-
-
-
-
-
-// Route::group([
-//     'middleware' => 'api',
-//     'prefix' => 'auth'
-
-// ],(function () {
-//     Route::get('init', 'api\AppController@init');
-//     Route::post('login', 'api\LoginController@login');
-//     Route::get('current', 'api\LoginController@getUser');
-//     Route::post('register', 'api\AppController@register');
-//     Route::post('logout', 'api\AppController@logout');
-
-//     Route::middleware('auth:api')->get('/all', 'api\user\UserController@index');
-// });
-
 Route::post('login', 'api\LoginController@login');
-Route::post('logout', 'api\LoginController@logout');
-Route::post('register', 'api\LoginController@register');
-
-
-
-Route::group(['middleware' => ['before' => 'jwt.auth']], function () {
-    // Route::get('user-profile', 'api\LoginController@userProfile');
-
-    Route::get('user/all', 'api\user\UserController@index');
+Route::group([
+    'middleware' => 'api',
+], function ($router) {
+    Route::post('logout', 'api\LoginController@logout');
+    Route::get('getuser', 'api\LoginController@getUser');
+    Route::post('register', 'api\LoginController@register');
+    Route::get('admin/all', 'api\user\UserController@index');
+    Route::post('admin/save', 'api\user\UserController@save');
+    Route::post('admin/del', 'api\user\UserController@del');
+    Route::get('property/all', 'api\property\PropertyController@index');
 });
 
-// Route::get('init', 'api\AppController@init');
-// Route::post('login', 'api\LoginController@login');
-// Route::get('current', 'api\LoginController@getUser');
 
-// Route::post('register', 'api\AppController@register');
-// Route::post('logout', 'api\AppController@logout');
+// Route::middleware('auth:api')->get('/property/all', 'api\property\PropertyController@index');
+// Route::group(['middleware' => 'auth:api'], function () {
+//     Route::get('user/all', 'api\user\UserController@index');
+//     Route::get('property/all', 'api\property\PropertyController@index');
+// });
+
+
+
+
+// Route::group(['middleware' => ['before' => 'jwt.auth']], function () {
+//     // Route::get('user-profile', 'api\LoginController@userProfile');
+
+    
+// });

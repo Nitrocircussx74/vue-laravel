@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Auth;
+// use Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 use JWTAuth;
 use Carbon\Carbon;
@@ -45,39 +46,27 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        // $this->middleware('guest')->except('logout');
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
     public function login(Request $r)
     {
-
-        $validator = Validator::make($r->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        if (!$token = auth('api')->attempt($validator->validated())) {
+        $credentials = request(['email', 'password']);
+        if (!$token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
         return $this->createNewToken($token);
-
-        // $credentials = request(['email', 'password']);
-
-        // if (!$token = auth('api')->attempt($credentials)) {
-        //     return response()->json(['error' => 'Unauthorized'], 401);
-        // }
-        // return $this->createNewToken($token);
-
-        // return response()->json(['user' => Auth::user(), 'token' => $token], 200);
     }
     public function getUser()
     {
         $user = Auth::user();
-        return response()->json(['user' => $user, 200]);
+
+        return response()->json(['user' => $user], 200);
+    }
+
+    public function refresh()
+    {
+        return $this->createNewToken(auth()->refresh());
     }
     public function logout()
     {
@@ -113,8 +102,12 @@ class LoginController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
+
             //'expires_in' => auth()->factory()->getTTL() * 60
             'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user' => $this->guard()->user(),
+
+
         ]);
     }
 }

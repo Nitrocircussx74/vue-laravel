@@ -4,9 +4,13 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"> </v-app-bar-nav-icon>
       <v-toolbar-title>Vuetify </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-col cols="auto">
+        {{ user.user.name }}
+      </v-col>
+
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on">
+          <v-btn small icon v-bind="attrs" v-on="on">
             <v-icon>keyboard_arrow_down</v-icon>
           </v-btn>
         </template>
@@ -49,29 +53,29 @@
 
 <script>
 import currentUser from "../store/modules/currentUser";
+
+import { mapGetters, mapActions } from "vuex";
 export default {
   mounted() {},
-  // computed: {
-  //   currentUser: {
-  //     get() {
-  //       return this.$store.state.currentUser.user;
-  //     },
-  //   },
-  // },
+  computed: {
+    ...mapGetters({
+      user: "currentUser/user",
+      tokens: "currentUser/token",
+      is_login: "currentUser/is_login",
+    }),
+  },
   methods: {
+    ...mapActions({
+      singout: "currentUser/logoutUser",
+    }),
     logout() {
-      this.$store.dispatch("currentUser/logoutUser");
-      // axios
-      //   .post("/api/user/logout")
-      //   .then((response) => {
-      //     window.location.href = "login";
-      //     // this.$router.push("/login");
-      //     // location.reload();
-      //   })
-      //   .catch((error) => {
-      //     console.log("error");
-      //     // location.reload();
-      //   });
+      this.singout().then(() => {
+        if (this.$route.path != "/") {
+          this.$router.push({
+            name: "app",
+          });
+        }
+      });
     },
     menuActionClick(action) {
       if (action === "test") {
@@ -82,15 +86,7 @@ export default {
       }
     },
   },
-  created() {
-    if (localStorage.hasOwnProperty("token")) {
-      axios.defaults.headers.common["Authorization"] =
-        "Beare" + localStorage.getItem("token");
-      // this.$store.dispatch("currentUser/getUser");
-    } else {
-      window.location.replace("/login");
-    }
-  },
+
   data() {
     return {
       toolbar_menu: [
@@ -98,9 +94,15 @@ export default {
         { title: "Logout", icon: "mdi-view-dashboard", action: "logout" },
       ],
       items: [
-        { title: "Home", icon: "mdi-view-dashboard", route: "/home" },
+        { title: "Admin", icon: "lock", route: "/admin" },
+        { title: "Property", icon: "mdi-view-dashboard", route: "/property" },
         { title: "About", icon: "mdi-help-box", route: "/about" },
-        { title: "Logout", icon: "lock", route: "/" },
+        {
+          title: "Property Unit",
+          icon: "mdi-help-box",
+          route: "/front/property-unit",
+        },
+        // { title: "Logout", icon: "lock", route: "/" },
       ],
       right: null,
       drawer: true,

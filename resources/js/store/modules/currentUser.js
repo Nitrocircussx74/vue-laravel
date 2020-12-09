@@ -1,48 +1,73 @@
 import Axios from "axios";
+import { attempt } from "lodash";
 
 const state ={
     user:{},
+    token:null,
+    is_login:false,
+  
+};
+const mutations ={
+    SET_TOKEN(state,token){
+        state.token = token;
+    },
+    SET_USER(state,user){
+        state.user=user;
+    },
+    SET_LOGIN(state,is_login){
+        state.is_login=is_login;
+    }
+
 };
 const getters ={
+  authenticated(state){
+    return state.token && state.user
+  },
+  token(state){
+    return state.token
+  },
+  user(state){
+    return state.user
+  },
+  is_login(state){
+    return state.is_login
+  }
 
 };
 const actions ={
-    // getUser(commit){
-    //     axios.get("api/current").then(res=>{
-    //         commit('setUser',res.data);
-    //     })
-    // },
-    loginUser({state,commit},user)
+    async loginUser({dispatch},user)
     {
-            axios.post("api/login",{
-                email:user.email,
-                password:user.password
-            }).then(res=>{
-               
-                if(res.data.access_token)
-            {
-                localStorage.setItem('token',res.data.access_token)
-            }
-
-            // console.log(res.data.access_token);
-                // console.log(res.data);
-                window.location.replace("/home")
-            })
+        let res = await axios.post("api/login",user)
+      return  dispatch('attempt',res.data.access_token);
     },
-    logoutUser(){
-        //remove token
-        localStorage.removeItem("token");
-        window.location.replace("/login");
-    }
+    async attempt({commit},token){
+        commit('SET_TOKEN',token)
+        try{
+            let res = await axios.get('api/getuser')
+            localStorage.setItem('token',token)
+            commit('SET_USER',res.data)
+            commit('SET_LOGIN',true)
+          
+
+        }catch(e){
+            commit('SET_TOKEN',null)
+            commit('SET_USER',null)
+            commit('SET_LOGIN',false)
+            console.log('failed');
+        }
+
+    },
+    logoutUser({commit})
+    {     
+        return axios.post("api/logout").then(()=>{
+            commit('SET_TOKEN',null)
+            commit('SET_USER',null)
+            commit('SET_LOGIN',false)
+            localStorage.removeItem("token");
+        });
+    },
 
 };
-const mutations ={
-    setUser(state,data){
-        state.user=data;
-    }
-
-};
-
 export default { 
     namespaced:true,
     state,

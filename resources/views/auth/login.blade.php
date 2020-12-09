@@ -6,7 +6,6 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
-
                 <div id="app" class="card-body">
                     <login-form></login-form>
                 </div>

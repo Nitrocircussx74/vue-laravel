@@ -13,38 +13,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Auth::routes();
-
-Route::get('/logout', 'Auth\LoginController@logout');
-Route::get('/home', 'HomeController@index')->name('home');
-
-
-Route::prefix('auth')->group(function () {
-    Route::get('init', 'AppController@init');
-    Route::post('login', 'AppController@login');
-    Route::post('register', 'AppController@register');
-    Route::post('logout', 'AppController@logout');
-});
-// Auth::routes();
-
-// Route::get('/home', 'HomeController@index')->name('home');
-
-// Auth::routes();
-
-// Route::get('/home', 'HomeController@index')->name('home');
-
-// Auth::routes();
-
-// Route::get('/home', 'HomeController@index')->name('home');
-
-// Auth::routes();
-
-// Route::get('/home', 'HomeController@index')->name('home');
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('{any?}', function () {
+    return view('welcome');
+});
+Route::get('/front/{any?}', function () {
+    return view('welcome');
+})->where('any','.*');
+
+// Auth::routes();
+
+Route::get('/app', 'HomeController@index')->name('home');
+// Route::get('user/all', 'api\user\UserController@index');
+Route::group(['middleware' => 'api'], function () {
+    Route::resource('front/admin/property/units', 'PropertyAdmin\PropertyUnitController@unitList');
+    Route::post('front/admin/property/units/getUnit', 'PropertyAdmin\PropertyUnitController@getUnit');
+    Route::post('front/admin/property/units/edit/form', 'PropertyAdmin\PropertyUnitController@editForm');
+    Route::post('front/admin/property/units/edit-tenant/form', 'PropertyAdmin\PropertyUnitController@editTenantForm');
+    Route::post('front/admin/property/units/add', 'PropertyAdmin\PropertyUnitController@add');
+    Route::post('front/admin/property/units/edit', 'PropertyAdmin\PropertyUnitController@edit');
+    Route::post('front/admin/property/units/edit-tenant', 'PropertyAdmin\PropertyUnitController@editTenant');
+    Route::post('front/admin/property/units/clear', 'PropertyAdmin\PropertyUnitController@clearUnit');
+    Route::post('front/admin/property/unit/check-balance', 'PropertyAdmin\PropertyUnitController@checkBalance');
+    Route::post('front/admin/property/units/delete-tenant', 'PropertyAdmin\PropertyUnitController@deleteTenant');
+
+    Route::resource('front/admin/property/units-invite', 'PropertyAdmin\PropertyUnitController@inviteCodeList');
+    Route::post('front/admin/property/units/export', 'PropertyAdmin\PropertyUnitController@exportPropertyUnit');
+});

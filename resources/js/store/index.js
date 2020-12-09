@@ -1,12 +1,20 @@
 import Vue from 'vue'
+import axios from 'axios'
 import Vuex from 'vuex'
 Vue.use(Vuex)
-
+import createPersistedState from 'vuex-persistedstate'
 import currentUser from './modules/currentUser'
+import userList from './modules/userList'
+import PropertyList from './modules/PropertyList'
 export default new Vuex.Store({
   modules:{
-    currentUser
+    currentUser,
+    userList,
+    PropertyList
   },
+  plugins: [createPersistedState()]
+   
+
   // state: {
   //     count:100
   // },

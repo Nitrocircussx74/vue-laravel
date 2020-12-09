@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   // store,
   data: () => ({
@@ -32,11 +33,16 @@ export default {
       password: "",
     },
   }),
-  // mounted() {},
   methods: {
+    ...mapActions({
+      singin: "currentUser/loginUser",
+    }),
     login() {
-      // this.$store.dispatch("loginUser");
-      this.$store.dispatch("currentUser/loginUser", this.user);
+      this.singin(this.user).then(() => {
+        this.$router.push({
+          name: "admin",
+        });
+      });
     },
   },
 };
