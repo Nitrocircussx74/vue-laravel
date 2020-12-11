@@ -24,6 +24,7 @@
 </template>
 
 <script>
+/*
 import { mapActions } from "vuex";
 export default {
   // store,
@@ -45,6 +46,46 @@ export default {
       });
     },
   },
+}; */
+export default {
+  name: 'Login',
+  data: () => ({
+    user: {
+      email: "",
+      password: "",
+    },
+  }),
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
+  },
+  created() {
+    if (this.loggedIn) {
+        this.$router.push({
+          name: "admin",
+        });
+    }
+  },
+  methods: {
+    login() {
+      this.loading = true;
+        if (this.user.email && this.user.password) {
+          this.$store.dispatch('auth/login', this.user).then(
+            () => {
+              this.$router.push('/admin');
+            },
+            error => {
+              this.loading = false;
+              this.message =
+                (error.response && error.response.data && error.response.data.message) ||
+                error.message ||
+                error.toString();
+            }
+          );
+        }
+    }
+  }
 };
 </script>
 

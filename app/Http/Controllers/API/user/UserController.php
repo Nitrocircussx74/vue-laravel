@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api\user;
+namespace App\Http\Controllers\API\user;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -42,8 +42,10 @@ class UserController extends Controller
     {
         if ($r->fac == "add") {
             $officer = $r->all();
+            // dd($officer);
             $new_officer = new User();
             $officer['email'] = strtolower(trim($officer['email']));
+            //dd($new_officer);
             $vu = $new_officer->validate($officer);
 
             if ($vu->fails()) {

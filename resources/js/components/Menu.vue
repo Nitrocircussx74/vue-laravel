@@ -1,11 +1,14 @@
 <template>
   <nav>
-    <v-app-bar app>
+    <v-app-bar absolute temporary>
+      <!-- <v-app-bar app> -->
       <v-app-bar-nav-icon @click="drawer = !drawer"> </v-app-bar-nav-icon>
-      <v-toolbar-title>Vuetify </v-toolbar-title>
+      <v-toolbar-title class="text-uppercase grey--text"
+        >New Nabour
+      </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-col cols="auto">
-        {{ user.user.name }}
+      <v-col class="grey--text" cols="auto">
+        {{ user.name }}
       </v-col>
 
       <v-menu offset-y>
@@ -26,20 +29,22 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-navigation-drawer app v-model="drawer">
-      <v-list-item>
+    <!-- <v-navigation-drawer absolute temporary v-model="drawer"> -->
+    <v-navigation-drawer absolute temporary v-model="drawer">
+      <!-- <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title"> New Nabour </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
-      <v-divider></v-divider>
+      <v-divider></v-divider> -->
       <v-list-item-group>
         <v-list-item
           v-for="item in items"
           :key="item.title"
           router
           :to="item.route"
+          @click="menuActionClick(item.action)"
         >
           <v-list-item-icon>
             <v-icon dark color="#7E6990" v-text="item.icon"></v-icon>
@@ -54,34 +59,27 @@
 <script>
 import currentUser from "../store/modules/currentUser";
 
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   mounted() {},
   computed: {
-    ...mapGetters({
-      user: "currentUser/user",
-      tokens: "currentUser/token",
-      is_login: "currentUser/is_login",
-    }),
+    is_login() {
+      return this.$store.state.auth.status.loggedIn;
+    },
+    user() {
+      return this.$store.state.auth.user;
+    },
   },
   methods: {
     ...mapActions({
       singout: "currentUser/logoutUser",
     }),
     logout() {
-      this.singout().then(() => {
-        if (this.$route.path != "/") {
-          this.$router.push({
-            name: "app",
-          });
-        }
-      });
+      this.$store.dispatch("auth/logout");
+      this.$router.push({ name: "app" });
     },
     menuActionClick(action) {
-      if (action === "test") {
-        console.log("TEST!!");
-      } else if (action === "logout") {
-        console.log("logout!!");
+      if (action === "logout") {
         this.logout();
       }
     },
@@ -90,22 +88,23 @@ export default {
   data() {
     return {
       toolbar_menu: [
-        { title: "TEST", icon: "mdi-view-dashboard", action: "test" },
+        //{ title: "TEST", icon: "mdi-view-dashboard", action: "test" },
         { title: "Logout", icon: "mdi-view-dashboard", action: "logout" },
       ],
       items: [
         { title: "Admin", icon: "lock", route: "/admin" },
         { title: "Property", icon: "mdi-view-dashboard", route: "/property" },
-        { title: "About", icon: "mdi-help-box", route: "/about" },
         {
           title: "Property Unit",
           icon: "mdi-help-box",
           route: "/front/property-unit",
         },
+        { title: "Mails & Parcels", icon: "mdi-email", route: "/post" },
+        { title: "Logout", icon: "lock", action: "logout" }, //mdi:card-search
         // { title: "Logout", icon: "lock", route: "/" },
       ],
       right: null,
-      drawer: true,
+      drawer: false,
     };
   },
 };

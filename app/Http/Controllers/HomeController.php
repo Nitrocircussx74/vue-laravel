@@ -13,9 +13,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        // $this->middleware('backend-admin');
     }
-
     /**
      * Show the application dashboard.
      *

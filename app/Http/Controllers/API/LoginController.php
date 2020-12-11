@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
@@ -55,7 +55,7 @@ class LoginController extends Controller
         if (!$token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        return $this->createNewToken($token);
+        return response()->json($this->createNewToken($token), 200);
     }
     public function getUser()
     {
@@ -99,7 +99,7 @@ class LoginController extends Controller
 
     protected function createNewToken($token)
     {
-        return response()->json([
+        return [
             'access_token' => $token,
             'token_type' => 'bearer',
 
@@ -108,6 +108,6 @@ class LoginController extends Controller
             'user' => $this->guard()->user(),
 
 
-        ]);
+        ];
     }
 }

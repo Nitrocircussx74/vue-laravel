@@ -7,6 +7,7 @@ use App\Http\Controllers\Notifications\VerifyApiEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Facades\Validator;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -19,10 +20,14 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password', 'phone', 'pea_customer',
-    ];
+    protected $fillable = ['name', 'email', 'password', 'property_id', 'property_unit_id', 'role', 'verification_code', 'profile_pic_name', 'profile_pic_path', 'dob', 'phone', 'gender', 'is_chief', 'is_subscribed_newsletter'];
 
+    public $rules = [
+        'name' => 'required',
+        'email' => 'required|email|max:255|unique:users,email',
+        'password' => 'alpha_num|min:4|required',
+        'password_confirm' => 'alpha_num|min:4|required|same:password'
+    ];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -63,11 +68,13 @@ class User extends Authenticatable implements JWTSubject
         $this->notify(new MailResetPasswordNotification($token));
     }
 
-    /**
-     * Send the email verification notification.
-     * @note: This override Authenticatable methodology
-     *
-     * @param  none
-     * @return void
-     */
+    public function validate($data)
+    {
+        Validator::extend('not_empty', function ($attribute, $value, $parameters) {
+            return !empty($value);
+        });
+
+        $v = Validator::make($data, $this->rules);
+        return $v;
+    }
 }

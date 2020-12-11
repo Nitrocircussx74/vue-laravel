@@ -1,30 +1,12 @@
-import Axios from "axios";
-
-const state ={
-    property:{},
-};
-const getters ={
-
-};
 const actions ={
-    getProperty(commit){
-        axios.get("api/property/all").then(res=>{
-            console.log(res.data);
-            commit('setProperty',res.data);
-        })
+    async getProperty({commit})
+    {
+    let res = await axios.get("api/property/all")
+    //commit('SET_PROPERTY',res.data);
+    return res;
     },
 };
-const mutations ={
-    setProperty(state,data){
-        state.property=data;
-    }
-
-};
-
 export default { 
     namespaced:true,
-    state,
-    getters,
-    actions,
-    mutations
+    actions
 }
