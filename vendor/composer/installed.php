@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '695d7f8829cf012308632f6b0f40a4e6159ce712',
+    'reference' => '5a6e63572756652dbd70dc276520f689d2cebe80',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -431,7 +431,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '695d7f8829cf012308632f6b0f40a4e6159ce712',
+      'reference' => '5a6e63572756652dbd70dc276520f689d2cebe80',
     ),
     'laravel/tinker' => 
     array (
@@ -574,12 +574,12 @@
     ),
     'phar-io/version' => 
     array (
-      'pretty_version' => '3.0.3',
-      'version' => '3.0.3.0',
+      'pretty_version' => '3.0.4',
+      'version' => '3.0.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '726c026815142e4f8677b7cb7f2249c9ffb7ecae',
+      'reference' => 'e4782611070e50613683d2b9a57730e9a3ba5451',
     ),
     'phpdocumentor/reflection-common' => 
     array (
